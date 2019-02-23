@@ -64,7 +64,7 @@
                         <Col span="16" style="padding-left:6px;">
                         <Row class-name="made-child-con-middle" type="flex" align="middle">
                             <div>
-                                <b class="card-user-infor-name">Admin</b>
+                                <b class="card-user-infor-name">{{info.name}}</b>
                                 <p>super admin</p>
                             </div>
                         </Row>
@@ -286,6 +286,9 @@ export default {
     },
     pageTagsList() {
       return this.$store.state.app.pageOpenedList // 打开的页面的页面对象
+    },
+    info() {
+      return this.$store.state.user.info
     }
   },
   methods: {

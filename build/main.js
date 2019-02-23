@@ -84,8 +84,8 @@ module.exports = require("koa-router");
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(__dirname) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator__);
+/* WEBPACK VAR INJECTION */(function(__dirname) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_koa__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_koa___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_koa__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_nuxt__ = __webpack_require__(6);
@@ -108,17 +108,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 var start = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.mark(function _callee2() {
+  var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.mark(function _callee2() {
     var _this = this;
 
     var app, host, port, router, config, nuxt, builder;
-    return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+    return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             app = new __WEBPACK_IMPORTED_MODULE_1_koa___default.a();
             host = process.env.HOST || '127.0.0.1';
-            port = process.env.PORT || 8080;
+            port = process.env.PORT || 3000;
 
             // session必须在路由前注册
 
@@ -164,8 +164,8 @@ var start = function () {
           case 18:
 
             app.use(function () {
-              var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.mark(function _callee(ctx, next) {
-                return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+              var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.mark(function _callee(ctx, next) {
+                return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
@@ -335,8 +335,8 @@ router.get('/api/logout', __WEBPACK_IMPORTED_MODULE_1__controller_user__["b" /* 
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return userinfo; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return login; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return logout; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(13);
@@ -359,9 +359,9 @@ mock.onPost(__WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */].base_url + 
 });
 
 var userinfo = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.mark(function _callee(ctx, next) {
+  var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.mark(function _callee(ctx, next) {
     var token;
-    return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+    return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -386,10 +386,10 @@ var userinfo = function () {
 }();
 
 var login = function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.mark(function _callee2(ctx, next) {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.mark(function _callee2(ctx, next) {
     var _ctx$request$body, mobile, psd, _url, req, ret, msg, code, message, token, signkey, info, session;
 
-    return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+    return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
@@ -511,8 +511,8 @@ var login = function () {
 }();
 
 var logout = function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.mark(function _callee3(ctx, next) {
-    return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_nuxt_iview_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.mark(function _callee3(ctx, next) {
+    return __WEBPACK_IMPORTED_MODULE_0__Users_node_Desktop_agriWeb2_node_modules_babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:

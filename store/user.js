@@ -34,6 +34,9 @@ export const mutations = {
     state.token = token
   },
   SET_USERINFO: (state, info = {}) => {
+    if( typeof(info) == 'string') {
+      info = JSON.parse(info)
+    }
     state.info = info
   },
   // 登陆
