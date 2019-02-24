@@ -23,13 +23,13 @@ export const appRouter = [
     children: [
       {
         path: '/device/map',
-        title: '裝置類型',
+        title: '類型',
         name: 'device-map',
         icon: 'ios-book'
       },
       {
         path: '/device/manager',
-        title: '裝置管理',
+        title: '管理',
         name: 'device-manager',
         icon: 'ios-home'
       }

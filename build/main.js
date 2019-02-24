@@ -251,7 +251,7 @@ module.exports = {
   css: [{ src: '~assets/css/main.css'
     // { src: 'iview/dist/styles/iview.css' }
   }],
-  plugins: [{ src: '~plugins/flexible.js', ssr: false }, { src: '~plugins/iview.js', ssr: true }],
+  plugins: [{ src: '~plugins/flexible.js', ssr: false }, { src: '~plugins/iview.js', ssr: true }, { src: '~plugins/filters.js', ssr: true }],
   loading: './components/loading.vue',
   env: {
     NODE_ENV: "development"

@@ -20,7 +20,8 @@ module.exports = {
   ],
   plugins: [
     { src: '~plugins/flexible.js', ssr: false },
-    { src: '~plugins/iview.js', ssr: true }
+    { src: '~plugins/iview.js', ssr: true },
+    { src: '~plugins/filters.js', ssr: true }
   ],
   loading: './components/loading.vue',
   env: {

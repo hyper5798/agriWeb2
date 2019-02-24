@@ -108,12 +108,10 @@ export default {
             this.loading = false
             return false
           }
-          this.$Message.success('恭喜您，登錄成功！')
-          console.log('token', req.data.authToken)
-          console.log('userInfo :')
-          console.log(req.data)
+          this.$Message.success('!!!恭喜您，登錄成功！')
           this.$store.commit('user/SET_TOKEN', req.data.authToken)
           this.$store.commit('user/SET_USERINFO', req.data.userInfo)
+          this.$store.commit('user/SET_ROLE', req.data.role)
           this.$store.commit('app/setAvator', 'https://avatars3.githubusercontent.com/u/12723410?s=460&v=4');
           let route = {
             path: '/'

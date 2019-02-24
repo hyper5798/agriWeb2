@@ -4,7 +4,16 @@
 
 <template>
     <div>
-        <Table :ref="refs" :columns="columnsList" :data="thisTableData" border disabled-hover></Table>
+        <Table   
+                highlight-row 
+                :ref="refs" 
+                :columns="columnsList" 
+                :data="thisTableData" 
+                border 
+                disabled-hover 
+                @on-row-click="selectChange"
+                @on-select="selectItem">
+        </Table>
     </div>
 </template>
 
@@ -47,11 +56,12 @@ const deleteButton = (vm, h, currentRow, index) => {
     return h('Poptip', {
         props: {
             confirm: true,
-            title: '您确定要删除这条数据吗?',
+            title: '您確定要删除這條數據嗎?',
             transfer: true
         },
         on: {
             'on-ok': () => {
+                vm.isDel = true
                 vm.thisTableData.splice(index, 1);
                 vm.$emit('input', vm.handleBackdata(vm.thisTableData));
                 vm.$emit('on-delete', vm.handleBackdata(vm.thisTableData), index);
@@ -154,7 +164,8 @@ export default {
         return {
             columns: [],
             thisTableData: [],
-            edittingStore: []
+            edittingStore: [],
+            isDel: false
         };
     },
     created () {
@@ -270,6 +281,18 @@ export default {
                 delete item.saving;
             });
             return clonedData;
+        },
+        selectItem(selection, row) {
+            console.log('**** selectItem')
+            console.log(selection)
+            console.log(row)
+        },
+        selectChange(selection, row) {
+            let vm = this;
+            console.log('**** selectChange')
+            console.log(selection)
+            console.log(row)
+            vm.$emit('on-item-selected', selection);
         }
     },
     watch: {

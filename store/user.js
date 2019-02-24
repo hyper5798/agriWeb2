@@ -2,7 +2,8 @@ export const state = () => ({
   users: [],
   token: 'PhU0Sd9zwUSwOQgXnJpj7pgSwdA7YD80', // 登陆token
   sign_key: null, // 加密密钥
-  info: {} // 用户的信息
+  info: {},// 用户的信息
+  role: ''
 })
 
 export const getters = {
@@ -30,6 +31,11 @@ export const mutations = {
   SET_USERS: (state, users) => {
     state.users = users
   },
+  SET_ROLE: (state, role) => {
+    console.log('role : ')
+    console.log(role)
+    state.role = role
+  },
   SET_TOKEN: (state, token) => {
     state.token = token
   },
@@ -37,6 +43,7 @@ export const mutations = {
     if( typeof(info) == 'string') {
       info = JSON.parse(info)
     }
+    console.log(info)
     state.info = info
   },
   // 登陆
