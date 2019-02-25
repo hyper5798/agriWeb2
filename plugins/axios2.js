@@ -35,6 +35,12 @@ axios.interceptors.response.use(
     } */
     // console.log('axios2 res:')
     // console.log(res)
+    if (res.data.responseCode != '000') {
+      let msg = res.request.responseURL+ ' >> ' +res.data.responseMsg;
+      console.log(msg)
+      Message.error(msg || '無法取得資料')
+    }
+     
     return res
   },
   err => {

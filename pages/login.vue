@@ -27,8 +27,10 @@
   </div>
 </template>
 <script>
+import api from '~/libs/api.js'
 import md5 from '~/libs/md5'
 import axios from '~/plugins/axios2'
+import Vue from 'vue';
 export default {
   layout: 'full',
   asyncData({ query }) {
@@ -78,7 +80,12 @@ export default {
         } else {
           let _mobile = this.formData.user
           let _psd = md5(this.formData.password)
-          let req = await axios.post('/user/v1/login/gemtek', {
+          /* let req = await axios.post('/user/v1/login/gemtek', {
+            acc: this.formData.user,
+            pwd: this.formData.password,
+            type: 0
+          })*/A
+          let req = await api.toLogin({
             acc: this.formData.user,
             pwd: this.formData.password,
             type: 0
@@ -219,6 +226,7 @@ export default {
 </template>
 <script>
 import md5 from '~/libs/md5'
+import { toLogin } from '~/libs/api'
 import axios from '~/plugins/axios2'
 export default {
   layout: 'full',
@@ -269,11 +277,18 @@ export default {
         } else {
           let _mobile = this.formData.user
           let _psd = md5(this.formData.password)
-          let req = await axios.post('/user/v1/login/gemtek', {
+          /* let req = await axios.post('/user/v1/login/gemtek', {
             acc: this.formData.user,
             pwd: this.formData.password,
             type: 0
+          })*/
+          let req = await toLogin({
+            acc: this.formData.user,
+            pwd: this.formData.password,
+            cp: 'gemtek',
+            type: 0
           })
+
 
           // 网络异常
           if (req.status !== 200) {
@@ -298,8 +313,6 @@ export default {
             return false
           }
           this.$Message.success('恭喜您，登錄成功！')
-          console.log('token', req.data.authToken)
-          console.log('info', req.data.userInfo)
           this.$store.commit('user/SET_TOKEN', req.data.authToken)
           this.$store.commit('user/SET_USERINFO', JSON.stringify(req.data.userInfo))
           this.$store.commit('app/setAvator', 'https://avatars3.githubusercontent.com/u/12723410?s=460&v=4');

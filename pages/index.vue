@@ -208,6 +208,7 @@ import inforCard from '../components/home/components/inforCard.vue'
 import mapDataTable from '../components/home/components/mapDataTable.vue'
 import toDoListItem from '../components/home/components/toDoListItem.vue'
 import util from '@/libs/util.js'
+import { getUserList, getSensorList, getMapList,  } from '~/libs/api'
 import axios from '~/plugins/axios2'
 
 export default {
@@ -255,29 +256,24 @@ export default {
   },
   async asyncData ({context, app, error, store}) {
     let req, req1, req2
+    let params = {token: store.state.user.token}
     if(store.state.user.users.length == 0) {
-      req = await axios.get('/user/v1/users', {
-        params : {
-          token: store.state.user.token
-        }
-      })
-      store.commit('user/SET_USERS', req.data.users)
+      req = await getUserList(params)
+      if(req.data.users) {
+          store.commit('user/SET_USERS', req.data.users)
+      }
     }
     if(store.state.device.map.length == 0) {
-      req1 = await axios.get('/map/v1', {
-        params : {
-          token: store.state.user.token
-        }
-      })
-      store.commit('device/SET_MAP', req1.data.data)
+      req1 = await getMapList(params)
+      if(req1.data.data) {
+          store.commit('device/SET_MAP', req1.data.data)
+      }
     }
     if(store.state.device.list.length == 0) {
-      req2 = await axios.get('/device/v1/sensor', {
-        params : {
-          token: store.state.user.token
-        }
-      })
-      store.commit('device/SET_LIST', req2.data.mList)
+      req2 = await getSensorList(params)
+      if(req2.data.mList) {
+        store.commit('device/SET_LIST', req2.data.mList)
+      }
     }
   },
   computed: {
