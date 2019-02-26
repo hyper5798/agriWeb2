@@ -41,34 +41,35 @@ export const typeColumns = [
 export const parseColumns = [
   {
     title: '欄位',
-    type: 'index',
-    width: 80,
-    align: 'center'
+    align: 'center',
+    key: 'field',
+    editable: true
   },
   {
     title: '啟始前一位',
     align: 'center',
     width: 120,
-    key: 'name',
+    key: 'start',
     editable: true
   },
   {  
     title: '結束位置',
     align: 'center',
     width: 120,
-    key: 'sex'
+    key: 'end',
+    editable: true
   },
   {
     title: '公式',
     align: 'center',
-    key: 'work',
+    key: 'operation',
     editable: true
   },
   {
     title: '欄位名稱',
     align: 'center',
     width: 300,
-    key: 'work',
+    key: 'fieldName',
     editable: true
   },
   {

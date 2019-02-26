@@ -1,34 +1,16 @@
 <style lang="less">
 @import '../../assets/css/common.less';
-.dragging-tip-enter-active {
-  opacity: 1;
-  transition: opacity 0.3s;
-}
-.dragging-tip-enter,
-.dragging-tip-leave-to {
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.dragging-tip-con {
-  display: block;
-  text-align: center;
-  width: 100%;
-  height: 50px;
-}
-.dragging-tip-con span {
-  font-size: 18px;
-}
-.record-tip-con {
+.type-item {
   display: block;
   width: 100%;
-  height: 292px;
+  height: auto;
   overflow: auto;
 }
 .record-item {
   box-sizing: content-box;
   display: block;
   overflow: hidden;
-  height: 24px;
+  height: 240px;
   line-height: 24px;
   padding: 8px 10px;
   border-bottom: 1px dashed gainsboro;
@@ -76,7 +58,7 @@
 <template>
     <div>
         <Row>
-          <Col span="24">
+          <Col class="type-item" span="24">
             <Card>
                 <p slot="title">
                     <Icon type="load-b"></Icon>
@@ -90,7 +72,7 @@
         </Row>
         <Row>
           <Modal
-              width="80%"
+              width="90%"
               v-model="modal1"
               title="裝置類型細項"
               @on-ok="ok"
@@ -102,19 +84,18 @@
                     </Input>
                   </Col>
                   <Col span="4">
-                    <Input v-model="item.deviceType" style="width: 200px">
+                    <Input v-model="item.deviceType" style="width: 200px" disabled>
                       <span slot="prepend">類型代碼</span>
                     </Input>
                   </Col>
-                  <Col span="10">
-                    <Input v-model="testData" style="width: 600px">
+                  <Col span="8">
+                    <Input v-model="testData" >
                       <span slot="prepend">測試資料</span>
                     </Input>
                   </Col>
-                  <Col span="6">
-                    <Input v-model="item.typeName" style="width: 300px">
-                      <span slot="prepend">測試資料</span>
-                    </Input>
+                  <Col span="8">
+                    <Button type="success">按此解析資料</Button>
+                    <Button type="error">刪除此資料類型</Button>
                   </Col>
                   
               </Row>
@@ -138,6 +119,12 @@
 import canEditTable from '~/components/tables/components/canEditTable.vue'
 import tableData from '~/components/tables/components/table_data.js'
 import iotData from '~/components/tables/components/iot_data.js'
+let empty = {
+        typeName: '',
+        deviceType: '',
+        maptable: []
+      }
+
 export default {
   name: 'editable-table',
   components: {
@@ -152,11 +139,7 @@ export default {
       showCurrentTableData: false,
       modal1: false,
       testData: '',
-      item: {
-        typeName: '',
-        deviceType: '',
-        maptable: []
-      }
+      item: JSON.parse(JSON.stringify(empty))
     }
   },
   methods: {
@@ -189,15 +172,55 @@ export default {
     },
     ok () {
       this.$Message.info('Clicked ok');
+      for(let i=0; i < list.length; ++i) {
+          let key = list[i]
+          let arr = map.map[key]
+          let obj = {
+              'field': key,
+              'start': arr[0],
+              'end': arr[1],
+              'operation': arr[2],
+              'fieldName': map.fieldName[key]
+          }
+          if(this.item.maptable) {
+            this.item.maptable.push(obj)
+          }
+        }
     },
     cancel () {
       this.$Message.info('Clicked cancel');
+      
     },
     selectMap (map) {
-      console.log(map)
-      // this.tableData2 = map.
+      // console.log(map)
+      this.item = JSON.parse(JSON.stringify(empty))
+      this.item.typeName = map.typeName
+      this.item.deviceType = map.deviceType
       this.modal1 = true
-      this.item = map
+      if(map.map) {
+        let list = Object.keys(map.map)
+        for(let i=0; i < list.length; ++i) {
+          let key = list[i]
+          let arr = map.map[key]
+          let obj = {
+              'field': key,
+              'start': arr[0],
+              'end': arr[1],
+              'operation': arr[2],
+              'fieldName': map.fieldName[key]
+          }
+          if(this.item.maptable) {
+            this.item.maptable.push(obj)
+          }
+        }
+        this.tableData2 = this.item.maptable
+        console.log(JSON.stringify(this.item))
+      }
+    },
+    getTableDate(index,) {
+
+      
+
     }
   },
   created() {
