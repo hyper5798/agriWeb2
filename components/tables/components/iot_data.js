@@ -1,3 +1,5 @@
+import util from '@/libs/util.js'
+
 export const typeColumns = [
   {
     title: '序号',
@@ -22,7 +24,7 @@ export const typeColumns = [
     key: 'createTime',
     render: function (h) {
       return h('div', 
-        this.row.createTime)
+      util.formatDate(this.row.createTime,'YYYY-MM-DD HH:mm:ss'))
     }
   },
   {

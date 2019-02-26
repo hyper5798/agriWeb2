@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 let util = {}
 
 util.inOf = function(arr, targetArr) {
@@ -267,6 +268,13 @@ util.fullscreenEvent = function(vm) {
   // 权限菜单过滤相关
   vm.$store.commit('app/updateMenulist')
   // 全屏相关
+}
+
+util.formatDate = function(dateStr, fmt) {
+  var utc = moment(dateStr);
+  return utc.tz('Asia/Taipe').format(fmt)
+  //
+  // return dateStr
 }
 
 export default util
