@@ -228,6 +228,8 @@ export default {
 import md5 from '~/libs/md5'
 import { toLogin } from '~/libs/api'
 import axios from '~/plugins/axios2'
+import Cookies from 'js-cookie'
+
 export default {
   layout: 'full',
   asyncData({ query }) {
@@ -314,18 +316,23 @@ export default {
           }
           this.$Message.success('恭喜您，登錄成功！')
           this.$store.commit('user/SET_TOKEN', req.data.authToken)
-          this.$store.commit('user/SET_USERINFO', JSON.stringify(req.data.userInfo))
+          this.$store.commit('user/SET_USERINFO', req.data.userInfo)
           this.$store.commit('app/setAvator', 'https://avatars3.githubusercontent.com/u/12723410?s=460&v=4');
+          Cookies.set('token', req.data.authToken)
+          Cookies.set('userInfo', req.data.userInfo)
+          console.log('$$$$ store token: ', Cookies.get('token'))
+
           let route = {
             path: '/'
           }
           if (this.jump !== '' && typeof this.jump !== 'undefined') {
             route.path = this.jump
           }
-          setTimeout(() => {
+          localStorage.token = req.data.authToken
+          // setTimeout(() => {
             this.loading = false
             this.$router.push(route)
-          }, 1500)
+          // }, 1500)
         }
       })
     }

@@ -1,40 +1,12 @@
 <style lang="less">
 @import '../../assets/css/common.less';
-.dragging-tip-enter-active {
-  opacity: 1;
-  transition: opacity 0.3s;
+.type-item {
+  height: 500px;
 }
-.dragging-tip-enter,
-.dragging-tip-leave-to {
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.dragging-tip-con {
-  display: block;
-  text-align: center;
-  width: 100%;
-  height: 50px;
-}
-.dragging-tip-con span {
-  font-size: 18px;
-}
-.record-tip-con {
-  display: block;
-  width: 100%;
-  height: 292px;
-  overflow: auto;
-}
-.record-item {
-  box-sizing: content-box;
-  display: block;
-  overflow: hidden;
-  height: 24px;
-  line-height: 24px;
-  padding: 8px 10px;
-  border-bottom: 1px dashed gainsboro;
-}
-.record-tip-con span {
-  font-size: 14px;
+.device-item {
+  padding: 0 0 0 10px;
+  height: 550px;
+  border-bottom: 1px dashed #c3c3c3;
 }
 .edittable-test-con {
   height: 160px;
@@ -76,16 +48,31 @@
 <template>
     <div>
         <Row>
-          <Col span="24">
-            <Card>
+          <Col span="5">
+            <div class="device-item">
+              <Table
+                    height="600"
+                    highlight-row
+                    :columns="columnsList"
+                    :data="tableData"
+                    border
+                    @on-row-click="selectMap">
+              </Table>
+            </div>
+            
+          </Col>
+          <Col span="19">
+            <div class="device-item">
+              <Card>
                 <p slot="title">
                     <Icon type="load-b"></Icon>
-                    說明：點選任何一欄可進行細項設定
+                    說明：點選左邊類型後, 以下會依選擇裝置篩選
                 </p>
                 <div >
-                    <can-edit-table refs="table1" @on-delete="handleDel" v-model="tableData" :columns-list="columnsList"></can-edit-table>
+                    <can-edit-table refs="table1" @on-delete="handleDel" v-model="tableData2" :columns-list="columnsList2"></can-edit-table>
                 </div>
-            </Card>
+              </Card>
+            </div>
           </Col>
         </Row>
     </div>
@@ -103,13 +90,18 @@ export default {
     return {
       columnsList: [],
       tableData: [],
-      showCurrentTableData: false
+      olumnsList2: [],
+      tableData2: [],
+      showCurrentTableData: false,
+      mapList: []
     }
   },
   methods: {
     getData() {
-      this.columnsList = iotData.deviceColumns
-      this.tableData = this.$store.state.device.list
+      this.columnsList = iotData.testColumns
+      this.tableData = this.$store.state.device.map
+      this.columnsList2 = iotData.deviceColumns
+      this.tableData2 = this.$store.state.device.list
       console.log('managergetData list:')
       console.log(this.tableData)
     },
@@ -132,6 +124,17 @@ export default {
     },
     handleChange(val, index) {
       this.$Message.success('修改了第' + (index + 1) + '行数据')
+    },
+    selectMap (selection, row) {
+      let list = this.$store.state.device.list
+      let data = []
+      for(let i=0; i < list.length; ++i) {
+        let obj = list[i]
+        if(obj.fport == Number( selection.deviceType)) {
+          data.push(obj)
+        }
+      }
+      this.tableData2 = data
     }
   },
   created() {

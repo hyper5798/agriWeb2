@@ -60,7 +60,7 @@ const deleteButton = (vm, h, currentRow, index) => {
         on: {
             'on-ok': () => {
                 vm.isDel = true
-                vm.thisTableData.splice(index, 1);
+                //vm.thisTableData.splice(index, 1);
                 vm.$emit('input', vm.handleBackdata(vm.thisTableData));
                 vm.$emit('on-test', vm.handleBackdata(vm.thisTableData), index);
             }

@@ -258,6 +258,7 @@ export default {
       console.log('this.item.maptable length: ', this.item.maptable.length)
       console.log('handleTest delete index: ', index)
       this.item.maptable.splice(index, 1)
+      this.tableData2 = this.item.maptable
       console.log('this.item.maptable length: ', this.item.maptable.length)
     }
   },

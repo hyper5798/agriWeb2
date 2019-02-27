@@ -2,9 +2,9 @@ import util from '@/libs/util.js'
 
 export const typeColumns = [
   {
-    title: '序号',
+    title: '序號',
     type: 'index',
-    width: 80,
+    width: 60,
     align: 'center'
   },
   {  
@@ -38,6 +38,27 @@ export const typeColumns = [
     width: 240,
     key: 'handle'
   } */
+];
+
+export const testColumns = [
+  {
+    title: '序號',
+    type: 'index',
+    width: 60,
+    align: 'center'
+  },
+  {  
+    title: '類型名稱',
+    align: 'center',
+    key: 'typeName',
+    editable: true
+  },
+  {
+    title: '代號',
+    align: 'center',
+    key: 'deviceType',
+    width: 60,
+  }
 ];
 
 export const parseColumns = [
@@ -85,21 +106,25 @@ export const parseColumns = [
 
 export const deviceColumns = [
   {
-    title: '序号',
+    title: '序號',
     type: 'index',
-    width: 80,
-    align: 'center'
+    width: 60,
+    align: 'center',
+    flexd: 'left'
   },
   {  
     title: '名稱',
     align: 'center',
     key: 'device_name',
-    editable: true
+    width: 180,
+    editable: true,
+    flexd: 'left'
   },
   {
     title: '識別碼',
     align: 'center',
-    key: 'device_mac'
+    key: 'device_mac',
+    width: 180
   },
   {
     title: '裝置狀態',
@@ -120,14 +145,16 @@ export const deviceColumns = [
   {
     title: '操作',
     align: 'center',
-    width: 240,
+    width: 180,
     key: 'handle',
-    handle: ['edit', 'delete']
+    handle: ['edit', 'delete'],
+    flexd: 'right'
   }
 ];
 
 
 const tableData = {
+  testColumns: testColumns,
   typeColumns: typeColumns,
   parseColumns: parseColumns,
   deviceColumns: deviceColumns
