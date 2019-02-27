@@ -4,14 +4,12 @@
 
 <template>
     <div>
-        <Table   
-                highlight-row 
-                :ref="refs" 
-                :columns="columnsList" 
-                :data="thisTableData" 
-                border 
-                disabled-hover 
-                @on-row-click="selectChange"
+        <Table
+                :ref="refs"
+                :columns="columnsList"
+                :data="thisTableData"
+                border
+                disabled-hover
                 @on-select="selectItem">
         </Table>
     </div>
@@ -286,13 +284,6 @@ export default {
             console.log('**** selectItem')
             console.log(selection)
             console.log(row)
-        },
-        selectChange(selection, row) {
-            let vm = this;
-            console.log('**** selectChange')
-            console.log(selection)
-            console.log(row)
-            vm.$emit('on-item-selected', selection);
         }
     },
     watch: {

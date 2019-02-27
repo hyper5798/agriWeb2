@@ -65,7 +65,13 @@
                     說明：點選任何一欄可進行細項設定
                 </p>
                 <div >
-                    <can-edit-table refs="table1" @on-delete="handleDel" v-model="tableData" :columns-list="columnsList" @on-item-selected="selectMap"></can-edit-table>
+                    <Table
+                            highlight-row
+                            :columns="columnsList"
+                            :data="tableData"
+                            border
+                             @on-row-click="selectMap">
+                    </Table>
                 </div>
             </Card>
           </Col>
@@ -93,11 +99,13 @@
                       <span slot="prepend">測試資料</span>
                     </Input>
                   </Col>
-                  <Col span="8">
+                  <Col span="6">
                     <Button type="success">按此解析資料</Button>
                     <Button type="error">刪除此資料類型</Button>
                   </Col>
-                  
+                  <Col span="2">
+                    <Button type="warning" @click="addParseItem">增加欄位</Button>
+                  </Col>
               </Row>
               <br>
               <Row>
@@ -105,13 +113,8 @@
                     <can-edit-table refs="table1" @on-delete="handleDel" v-model="tableData2" :columns-list="columnsList2" @on-item-selected="selectMap"></can-edit-table>
                   </Col>
               </Row>
-              
-              
-              
           </Modal>
         </Row>
-        
-        
     </div>
 </template>
 
@@ -120,9 +123,12 @@ import canEditTable from '~/components/tables/components/canEditTable.vue'
 import tableData from '~/components/tables/components/table_data.js'
 import iotData from '~/components/tables/components/iot_data.js'
 let empty = {
+        index: 0,
         typeName: '',
         deviceType: '',
-        maptable: []
+        maptable: [],
+        map: [],
+        fieldName: {}
       }
 
 export default {
@@ -138,6 +144,7 @@ export default {
       tableData2: [],
       showCurrentTableData: false,
       modal1: false,
+      selectedIndex: 0,
       testData: '',
       item: JSON.parse(JSON.stringify(empty))
     }
@@ -171,56 +178,74 @@ export default {
       this.$Message.success('修改了第' + (index + 1) + '行数据')
     },
     ok () {
-      this.$Message.info('Clicked ok');
+      // this.$Message.info('Clicked ok');
+      console.log('this.item.index : ', this.item.index)
+      let list = JSON.parse(JSON.stringify(this.tableData2))
+      let fieldName = {}
+      let map = {}
       for(let i=0; i < list.length; ++i) {
-          let key = list[i]
-          let arr = map.map[key]
-          let obj = {
-              'field': key,
-              'start': arr[0],
-              'end': arr[1],
-              'operation': arr[2],
-              'fieldName': map.fieldName[key]
-          }
-          if(this.item.maptable) {
-            this.item.maptable.push(obj)
-          }
+        let tmp = list[i]
+        if(tmp.field =='' || tmp.fieldName =='' || tmp.start == '' || tmp.end == '' || tmp.operation == '') {
+          this.$Message.error('解析欄位中不能為空值');
+          return
         }
+        fieldName[tmp.field] = tmp.fieldName
+        let arr = [Number(tmp.start), Number(tmp.end), tmp.operation]
+        map[tmp.field] = arr
+      }
+      this.item.fieldName = fieldName
+      this.item.map = map
+      console.log('this.item : ', JSON.stringify(this.item))
+      this.$store.commit('device/UPDATE_MAP', this.item)
+      this.tableData = this.$store.state.device.map
     },
     cancel () {
       this.$Message.info('Clicked cancel');
       
     },
-    selectMap (map) {
-      // console.log(map)
+    selectMap (selection, row) {
       this.item = JSON.parse(JSON.stringify(empty))
-      this.item.typeName = map.typeName
-      this.item.deviceType = map.deviceType
+      this.item.index = row
+      let mMap = selection.map
+      console.log('selection  : ', selection)
+      console.log('this.item.index : ', this.item.index)
+      console.log('selection  map: ', mMap)
+      this.item.typeName = selection.typeName
+      this.item.deviceType = selection.deviceType
       this.modal1 = true
-      if(map.map) {
-        let list = Object.keys(map.map)
-        for(let i=0; i < list.length; ++i) {
-          let key = list[i]
-          let arr = map.map[key]
+      
+      if(mMap) {
+        let keys = Object.keys(selection.fieldName)
+        console.log(keys)
+        for(let i=0; i < keys.length; ++i) {
+          let key = keys[i]
+          let arr = mMap[key]
+          console.log(key)
+          console.log(arr)
           let obj = {
               'field': key,
               'start': arr[0],
               'end': arr[1],
               'operation': arr[2],
-              'fieldName': map.fieldName[key]
+              'fieldName': selection.fieldName[key]
           }
           if(this.item.maptable) {
             this.item.maptable.push(obj)
-          }
+          } 
         }
         this.tableData2 = this.item.maptable
-        console.log(JSON.stringify(this.item))
+        console.log('this.item:', JSON.stringify(this.item))
       }
     },
-    getTableDate(index,) {
-
-      
-
+    addParseItem () {
+      console.log('addParseItem : ', this.item.maptable.length)
+      this.item.maptable.push({
+            'field': '',
+            'start': '',
+            'end': '',
+            'operation': '',
+            'fieldName': ''
+        })
     }
   },
   created() {
