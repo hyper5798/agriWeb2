@@ -70,7 +70,7 @@
                             :columns="columnsList"
                             :data="tableData"
                             border
-                             @on-row-click="selectMap">
+                            @on-row-click="selectMap">
                     </Table>
                 </div>
             </Card>
@@ -110,7 +110,12 @@
               <br>
               <Row>
                 <Col span="24">
-                    <can-edit-table refs="table1" @on-delete="handleDel" v-model="tableData2" :columns-list="columnsList2" @on-item-selected="selectMap"></can-edit-table>
+                    <can-edit-table 
+                            refs="table1" 
+                            v-model="tableData2" 
+                            :columns-list="columnsList2" 
+                            @on-test="handleTest">
+                    </can-edit-table>
                   </Col>
               </Row>
           </Modal>
@@ -239,6 +244,7 @@ export default {
     },
     addParseItem () {
       console.log('addParseItem : ', this.item.maptable.length)
+      console.log('this.item.maptable length: ', this.item.maptable.length)
       this.item.maptable.push({
             'field': '',
             'start': '',
@@ -246,6 +252,13 @@ export default {
             'operation': '',
             'fieldName': ''
         })
+      console.log('this.item.maptable length: ', this.item.maptable.length)
+    },
+    handleTest (map, index) {
+      console.log('this.item.maptable length: ', this.item.maptable.length)
+      console.log('handleTest delete index: ', index)
+      this.item.maptable.splice(index, 1)
+      console.log('this.item.maptable length: ', this.item.maptable.length)
     }
   },
   created() {

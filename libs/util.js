@@ -272,7 +272,7 @@ util.fullscreenEvent = function(vm) {
 
 util.formatDate = function(dateStr, fmt) {
   var utc = moment(dateStr);
-  return utc.tz('Asia/Taipe').format(fmt)
+  return utc.tz('Asia/Taipei').format(fmt)
   //
   // return dateStr
 }
