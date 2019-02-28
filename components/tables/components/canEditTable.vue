@@ -5,6 +5,7 @@
 <template>
     <div>
         <Table
+                height="480"
                 :ref="refs"
                 :columns="columnsList"
                 :data="thisTableData"

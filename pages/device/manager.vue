@@ -51,7 +51,7 @@
           <Col span="5">
             <div class="device-item">
               <Table
-                    height="600"
+                    height="550"
                     highlight-row
                     :columns="columnsList"
                     :data="tableData"

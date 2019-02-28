@@ -1,13 +1,11 @@
 <style lang="less">
 @import '../../assets/css/common.less';
-.dragging-tip-enter-active {
-  opacity: 1;
-  transition: opacity 0.3s;
-}
-.dragging-tip-enter,
-.dragging-tip-leave-to {
-  opacity: 0;
-  transition: opacity 0.3s;
+.seletc-item {
+  background-color: #ffffff;
+  width: 100%;
+  height: 50px;
+  padding: 0px 10px;
+  line-height: 50px;
 }
 .dragging-tip-con {
   display: block;
@@ -75,61 +73,100 @@
 
 <template>
     <div>
-        <Row>
-            <Col span="16">
-            <Card>
-                <DragableTable v-model="tableData" :columns-list="columnsList" @on-start="handleOnstart1" @on-end="handleOnend1"></DragableTable>
-            </Card>
-            </Col>
-            <Col span="8" class="padding-left-10 height-100">
-            <Card>
-                <p slot="title">
-                    <Icon type="clipboard"></Icon>
-                    表格1操作记录( 拖拽 )
-                </p>
-                <Row style="height: 374px;">
-                    <div class="dragging-tip-con">
-                        <transition name="dragging-tip">
-                            <span v-show="table1.isDragging">您正在拖拽表格1单元行...</span>
-                        </transition>
-                    </div>
-                    <Card>
-                        <div class="record-tip-con">
-                            <div v-for="(item, index) in table1.draggingRecord" :key="index" class="record-item">
-                                拖拽第 {{ item.from }} 行表格到第 {{ item.to }} 行
-                            </div>
-                        </div>
-                    </Card>
-                </Row>
-            </Card>
-            </Col>
+        <Row class="seletc-item">
+          <Col span="6">
+            選擇類型
+            <Select v-model="selectType" style="width:200px">
+                <Option v-for="item in cityList" :value="item.deviceType" :key="item.deviceType">{{ item.typeName }})</Option>
+            </Select>
+          </Col>
+          <Col span="6">
+            
+              起始日期
+              <DatePicker type="date" 
+                          v-model="findItem.start" 
+                          placeholder="Select date" 
+                          style="width: 200px" 
+                          @on-change="handleChange"
+                          format="yyyy-MM-dd"></DatePicker>
+          
+          </Col>
+          <Col span="6">
+            
+              結束日期
+              <DatePicker type="date" 
+                          v-model="findItem.end" 
+                          placeholder="Select date" 
+                          style="width: 200px" 
+                          @on-change="handleChange2"
+                          format="yyyy-MM-dd"></DatePicker>
+          
+          </Col>
+          
         </Row>
         <Row class="margin-top-10">
-            <Col span="8" class="height-100">
+            <Col span="5" class="height-100">
             <Card>
                 <p slot="title">
                     <Icon type="clipboard"></Icon>
-                    表格2操作记录( 点击和拖拽 )
+                     選擇裝置
                 </p>
-                <Row style="height: 374px;">
-                    <div class="dragging-tip-con">
-                        <transition name="dragging-tip">
-                            <span v-show="table2.hasDragged">拖拽第 {{ table2.oldIndex + 1 }} 行表格到第 {{ table2.newIndex + 1 }} 行</span>
-                        </transition>
-                    </div>
-                    <Card>
-                        <div class="record-tip-con">
-                            <div v-for="(item, index) in table2.chooseRecord" :key="index" class="record-item">
-                                {{ item }}
-                            </div>
-                        </div>
-                    </Card>
-                </Row>
+                <Table
+                    height="350"
+                    highlight-row
+                    :columns="columnsList2"
+                    :data="tableData2"
+                    border
+                    @on-row-click="selectDevice">
+                </Table>
             </Card>
             </Col>
-            <Col span="16" class="padding-left-10">
+            <Col span="19" class="padding-left-10">
             <Card>
-                <DragableTable refs="table2" :columns-list="columnsList" v-model="tableData" @on-start="handleOnstart2" @on-end="handleOnend2" @on-choose="handleOnchoose2"></DragableTable>
+                <div slot="title" >
+                  <Row >
+                    <Col span="6">
+                          <Icon type="clipboard"></Icon>
+                          選擇裝置:{{findItem.mac}}
+                    </col>
+                    <Col span="4">
+                          起始日期:{{findItem.start}}
+                    </col>
+                    <Col span="4">
+                          結束日期:{{findItem.end}}
+                    </col>
+                    <Col span="8">
+                      <ButtonGroup>
+                        <Button type="info" ghost>
+                          <Icon type="ios-grid-view"></Icon>
+                          資料表
+                        </Button>
+                        <Button type="success">
+                          <Icon type="ios-alarm"></Icon>
+                          折線圖
+                        </Button>
+                      
+                        <Button type="warning" ghost>
+                          <Icon type="ios-refresh-empty"></Icon>
+                          更新
+                        </Button>
+                        <Button type="primary">
+                          <Icon type="ios-search"></Icon>
+                          查詢
+                        </Button>
+                      </ButtonGroup>
+                    </col>
+                  </Row>
+                </div>
+                  
+                <Table
+                      height="350"
+                      highlight-row
+                      :columns="columnsList2"
+                      :data="tableData2"
+                      border>
+                </Table>
+                
             </Card>
             </Col>
         </Row>
@@ -138,46 +175,41 @@
 
 <script>
 import DragableTable from '~/components/tables/components/dragableTable.vue'
+import canEditTable from '~/components/tables/components/canEditTable.vue'
+import iotData from '~/components/tables/components/iot_data.js'
 
 export default {
   name: 'dragable-table',
   components: {
-    DragableTable
+    DragableTable,
+    canEditTable
   },
   data() {
     return {
       columnsList: [],
       tableData: [],
-      table1: {
-        hasDragged: false,
-        isDragging: false,
-        oldIndex: 0,
-        newIndex: 0,
-        draggingRecord: []
-      },
+      columnsList2: [],
+      tableData2: [],
       table2: {
         hasDragged: false,
         isDragging: false,
         oldIndex: 0,
         newIndex: 0,
         chooseRecord: []
+      },
+      selectType: '',
+      cityList: [],
+      findItem: {
+        mac: '',
+        start: '',
+        end: ''
       }
     }
   },
   methods: {
-    handleOnstart1(from) {
-      this.table1.oldIndex = from
-      this.table1.hasDragged = true
-      this.table1.isDragging = true
-    },
-    handleOnend1(e) {
-      this.table1.isDragging = false
-      this.table1.draggingRecord.unshift({
-        from: e.from + 1,
-        to: e.to + 1
-      })
-    },
+
     handleOnstart2(from) {
+      
       this.table2.oldIndex = from
       this.table2.hasDragged = true
       this.table2.isDragging = true
@@ -190,6 +222,11 @@ export default {
       this.table2.chooseRecord.unshift(this.tableData[from].todoItem)
     },
     getData() {
+      this.selectType = this.$store.state.device.map[0]['deviceType'] 
+      this.cityList = this.$store.state.device.map
+      this.columnsList2 = iotData.deviceColumns2
+      console.log('this.cityList :')
+      console.log(this.cityList)
       this.columnsList = [
         {
           title: '序号',
@@ -254,11 +291,41 @@ export default {
           remarks: 'love'
         }
       ]
+    },
+    selectDevice (selection, row) {
+      this.findItem.mac = selection.device_mac
+    },
+    handleChange (date) {
+        this.findItem.start = date;
+    },
+    handleChange2 (date) {
+        this.findItem.end = date;
     }
   },
   created() {
     // 可在此从服务端获取表格数据
     this.getData()
+  },
+  watch: {
+      selectType (data) {
+        
+        let list = this.$store.state.device.list
+        let arr = []
+        for(let i=0; i < list.length; ++i) {
+          let obj = list[i]
+          if(Number(data) == obj.fport) {
+            arr.push(obj)
+          }
+        }
+
+        this.tableData2 = arr
+        if(arr.length>0 && arr[0]['device_mac']) {
+          this.findItem.mac = arr[0]['device_mac']
+        } else {
+          this.findItem.mac = ''
+        }
+        
+      }
   }
 }
 </script>

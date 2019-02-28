@@ -152,12 +152,24 @@ export const deviceColumns = [
   }
 ];
 
+export const deviceColumns2 = [
+  
+  {  
+    title: '名稱',
+    align: 'center',
+    key: 'device_name',
+    editable: true,
+    flexd: 'left'
+  }
+];
+
 
 const tableData = {
   testColumns: testColumns,
   typeColumns: typeColumns,
   parseColumns: parseColumns,
-  deviceColumns: deviceColumns
+  deviceColumns: deviceColumns,
+  deviceColumns2: deviceColumns2
 };
 
 export default tableData;
