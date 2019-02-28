@@ -33,8 +33,8 @@ axios.interceptors.response.use(
     /* if (res.status && res.status === 200 && res.data.status === 'error') {
       return
     } */
-    // console.log('axios2 res:')
-    // console.log(res)
+    console.log('axios2 res:')
+    console.log(res)
     if (res.data.responseCode != '000') {
       let msg = res.request.responseURL+ ' >> ' +res.data.responseMsg;
       console.log(msg)

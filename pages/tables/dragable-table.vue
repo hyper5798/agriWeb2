@@ -77,32 +77,29 @@
           <Col span="6">
             選擇類型
             <Select v-model="selectType" style="width:200px">
-                <Option v-for="item in cityList" :value="item.deviceType" :key="item.deviceType">{{ item.typeName }})</Option>
+                <Option v-for="item in mapList" :value="item.deviceType" :key="item.deviceType">{{ item.typeName }})</Option>
             </Select>
           </Col>
           <Col span="6">
-            
-              起始日期
-              <DatePicker type="date" 
-                          v-model="findItem.start" 
-                          placeholder="Select date" 
-                          style="width: 200px" 
-                          @on-change="handleChange"
-                          format="yyyy-MM-dd"></DatePicker>
-          
+            起始日期：
+            <DatePicker type="date" 
+                        v-model="start" 
+                        placeholder="選擇起始日期" 
+                        style="width: 200px" 
+                        @on-change="handleChange"
+                        format="yyyy-MM-dd">
+            </DatePicker>
           </Col>
           <Col span="6">
-            
-              結束日期
-              <DatePicker type="date" 
-                          v-model="findItem.end" 
-                          placeholder="Select date" 
-                          style="width: 200px" 
-                          @on-change="handleChange2"
-                          format="yyyy-MM-dd"></DatePicker>
-          
+            結束日期：
+            <DatePicker type="date" 
+                        v-model="end" 
+                        placeholder="選擇結束日期" 
+                        style="width: 200px" 
+                        @on-change="handleChange2"
+                        format="yyyy-MM-dd">
+            </DatePicker>
           </Col>
-          
         </Row>
         <Row class="margin-top-10">
             <Col span="5" class="height-100">
@@ -114,8 +111,8 @@
                 <Table
                     height="350"
                     highlight-row
-                    :columns="columnsList2"
-                    :data="tableData2"
+                    :columns="columnsList"
+                    :data="tableData"
                     border
                     @on-row-click="selectDevice">
                 </Table>
@@ -127,46 +124,46 @@
                   <Row >
                     <Col span="6">
                           <Icon type="clipboard"></Icon>
-                          選擇裝置:{{findItem.mac}}
+                          選擇裝置:{{findItem.macAddr}}
                     </col>
                     <Col span="4">
-                          起始日期:{{findItem.start}}
+                          起始日期:{{start}}
                     </col>
                     <Col span="4">
-                          結束日期:{{findItem.end}}
+                          結束日期:{{end}}
                     </col>
                     <Col span="8">
                       <ButtonGroup>
-                        <Button type="info" ghost>
+                        <Button type="primary" ghost>
                           <Icon type="ios-grid-view"></Icon>
                           資料表
                         </Button>
-                        <Button type="success">
+                        <Button type="primary">
                           <Icon type="ios-alarm"></Icon>
                           折線圖
                         </Button>
                       
-                        <Button type="warning" ghost>
+                        <Button type="primary">
                           <Icon type="ios-refresh-empty"></Icon>
                           更新
                         </Button>
-                        <Button type="primary">
-                          <Icon type="ios-search"></Icon>
+                        <Button type="primary" @click="toFind">
+                          <Icon type="ios-search" ></Icon>
                           查詢
                         </Button>
                       </ButtonGroup>
                     </col>
                   </Row>
                 </div>
-                  
-                <Table
+                <div>
+                  <Table
                       height="350"
                       highlight-row
                       :columns="columnsList2"
                       :data="tableData2"
                       border>
-                </Table>
-                
+                  </Table>
+                </div>
             </Card>
             </Col>
         </Row>
@@ -177,6 +174,8 @@
 import DragableTable from '~/components/tables/components/dragableTable.vue'
 import canEditTable from '~/components/tables/components/canEditTable.vue'
 import iotData from '~/components/tables/components/iot_data.js'
+import { getEventList } from '~/libs/api'
+import util from '~/libs/util.js'
 
 export default {
   name: 'dragable-table',
@@ -190,6 +189,7 @@ export default {
       tableData: [],
       columnsList2: [],
       tableData2: [],
+      allList: {},
       table2: {
         hasDragged: false,
         isDragging: false,
@@ -198,108 +198,92 @@ export default {
         chooseRecord: []
       },
       selectType: '',
-      cityList: [],
+      selectedMap: {},
+      mapList: [],
+      start: '2018-10-01',
+      end: '',
       findItem: {
-        mac: '',
-        start: '',
-        end: ''
+        macAddr: '',
+        from: '',
+        to: '',
+        paginate: false, 
+        limit: 5000
       }
     }
   },
   methods: {
-
-    handleOnstart2(from) {
-      
-      this.table2.oldIndex = from
-      this.table2.hasDragged = true
-      this.table2.isDragging = true
-    },
-    handleOnend2(e) {
-      this.table2.newIndex = e.to
-      this.table2.isDragging = false
-    },
-    handleOnchoose2(from) {
-      this.table2.chooseRecord.unshift(this.tableData[from].todoItem)
-    },
     getData() {
       this.selectType = this.$store.state.device.map[0]['deviceType'] 
-      this.cityList = this.$store.state.device.map
-      this.columnsList2 = iotData.deviceColumns2
-      console.log('this.cityList :')
-      console.log(this.cityList)
-      this.columnsList = [
-        {
-          title: '序号',
-          type: 'index',
-          width: 80,
-          align: 'center'
-        },
-        {
-          title: '待办事项',
-          key: 'todoItem'
-        },
-        {
-          title: '备注',
-          key: 'remarks'
-        },
-        {
-          title: '拖拽',
-          key: 'drag',
-          width: 90,
-          align: 'center',
-          render: h => {
-            return h('Icon', {
-              props: {
-                type: 'arrow-move',
-                size: 24
-              }
-            })
-          }
+      this.mapList = this.$store.state.device.map
+      this.columnsList = iotData.deviceColumns2
+      
+      let list = this.$store.state.device.list
+      let arr = []
+      for(let i=0; i < list.length; ++i) {
+        let obj = list[i]
+        let type = obj.fport
+        if(this.allList[type] == undefined) {
+          this.allList[type] = []
         }
-      ]
-      this.tableData = [
-        {
-          todoItem: '明天去后海玩',
-          remarks: '估计得加班'
-        },
-        {
-          todoItem: '后天去和妹子看电影',
-          remarks: '可能没妹子'
-        },
-        {
-          todoItem: '大后天去吃海天盛筵',
-          remarks: '没钱就不去了'
-        },
-        {
-          todoItem: '周末去看电影',
-          remarks: '估计得加班'
-        },
-        {
-          todoItem: '下个月准备回家看父母',
-          remarks: '估计得加班'
-        },
-        {
-          todoItem: '该买回家的票了',
-          remarks: '可能没票了'
-        },
-        {
-          todoItem: '过年不回家和父母视频聊天',
-          remarks: '一定要记得'
-        },
-        {
-          todoItem: '去车站接父母一起在北京过年',
-          remarks: 'love'
-        }
-      ]
+        (this.allList[type]).push(obj)
+      }
+      console.log(JSON.stringify(this.allList))
     },
     selectDevice (selection, row) {
-      this.findItem.mac = selection.device_mac
+      this.findItem.macAddr = selection.device_mac
     },
     handleChange (date) {
-        this.findItem.start = date;
+        this.start = date;
     },
     handleChange2 (date) {
-        this.findItem.end = date;
+        this.end = date;
+    },
+    async toFind () {
+      // 取得table header -- start
+      let keys = Object.keys(this.selectedMap.fieldName)
+      let values = Object.values(this.selectedMap.fieldName)
+      this.columnsList2 = JSON.parse(JSON.stringify(iotData.eventColumns))
+      for(let i = 0; i < values.length; ++i) {
+        let obj = {
+          title: values[i],
+          align: 'center',
+          key: 'information',
+          render: function (h) {
+            return h('div', this.row.information[keys[i]]);
+          }
+        }
+        this.columnsList2.push(obj)
+      } 
+      console.log('keys :', JSON.stringify(keys))
+      console.log('values :', JSON.stringify(values))
+      console.log('values :', JSON.stringify(this.columnsList2))
+      this.findItem.token = this.$store.state.user.token
+      this.findItem.from = this.start + ' 00:00:00Z+8'
+      this.findItem.to = this.end + ' 00:00:00Z+8'
+      
+      this.findItem.macAddr = this.findItem.macAddr.toLowerCase();
+      let req = await getEventList(this.findItem)
+      if(req.data && req.data.data) {
+        this.tableData2 = req.data.data
+      }
+    },
+    getMapAndDevice (type) {
+      // type選中的類型代號
+      // 取得選中的類型
+      for(let i = 0; i < this.mapList.length; i++) {
+        let map = this.mapList[i]
+        if(map.deviceType == type) {
+          this.selectedMap = map
+        }
+      }
+      //取得類型下裝置
+      this.tableData = this.allList[type]
+      //取得類型下裝置列表第一個裝置mac
+      if(this.tableData.length>0 && this.tableData[0]['device_mac']) {
+        this.findItem.macAddr = this.tableData[0]['device_mac']
+      } else {
+        this.findItem.macAddr = ''
+      }
     }
   },
   created() {
@@ -308,23 +292,7 @@ export default {
   },
   watch: {
       selectType (data) {
-        
-        let list = this.$store.state.device.list
-        let arr = []
-        for(let i=0; i < list.length; ++i) {
-          let obj = list[i]
-          if(Number(data) == obj.fport) {
-            arr.push(obj)
-          }
-        }
-
-        this.tableData2 = arr
-        if(arr.length>0 && arr[0]['device_mac']) {
-          this.findItem.mac = arr[0]['device_mac']
-        } else {
-          this.findItem.mac = ''
-        }
-        
+        this.getMapAndDevice(data)
       }
   }
 }

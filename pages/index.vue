@@ -209,7 +209,6 @@ import mapDataTable from '../components/home/components/mapDataTable.vue'
 import toDoListItem from '../components/home/components/toDoListItem.vue'
 import util from '@/libs/util.js'
 import { getUserList, getSensorList, getMapList,  } from '~/libs/api'
-import axios from '~/plugins/axios2'
 
 export default {
   name: 'home',

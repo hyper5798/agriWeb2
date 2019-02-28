@@ -38,13 +38,13 @@ export const appRouter = [
   {
     path: '/tables',
     icon: 'ios-grid-view',
-    title: '表格',
+    title: '歷史紀錄',
     name: 'tables',
     children: [
       {
         path: '/tables/dragable-table',
-        title: '可拖拽排序',
-        icon: 'arrow-move',
+        title: '查詢',
+        icon: 'ios-search',
         name: 'tables-dragable-table'
       },
       {

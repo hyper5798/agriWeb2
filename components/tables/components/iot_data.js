@@ -1,4 +1,4 @@
-import util from '@/libs/util.js'
+import util from '~/libs/util.js'
 
 export const typeColumns = [
   {
@@ -24,7 +24,7 @@ export const typeColumns = [
     key: 'createTime',
     render: function (h) {
       return h('div', 
-      util.formatDate(this.row.createTime,'YYYY-MM-DD HH:mm:ss'))
+        util.formatDate(this.row.createTime,'YYYY-MM-DD HH:mm:ss'))
     }
   },
   {
@@ -163,13 +163,45 @@ export const deviceColumns2 = [
   }
 ];
 
+export const eventColumns = [
+  {
+    title: '序號',
+    type: 'index',
+    width: 60,
+    align: 'center',
+    fixed: 'left'
+  },
+  {
+    title: '日期',
+    align: 'center',
+    key: 'recv',
+    render: function (h) {
+      return h('div',util.formatDate2(this.row.recv, 'YYYY-MM-DD HH:mm:ss'))
+    }
+  }/* ,
+  {
+    title: '參數',
+    align: 'center',
+    key: 'information'
+  } ,
+  {
+    title: '創建日期',
+    align: 'center',
+    key: 'information',
+    render: function (h) {
+      return h('div', this.row.information.temperature);
+    }
+  }*/
+];
+
 
 const tableData = {
   testColumns: testColumns,
   typeColumns: typeColumns,
   parseColumns: parseColumns,
   deviceColumns: deviceColumns,
-  deviceColumns2: deviceColumns2
+  deviceColumns2: deviceColumns2,
+  eventColumns: eventColumns
 };
 
 export default tableData;

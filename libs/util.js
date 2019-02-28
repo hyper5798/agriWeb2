@@ -277,4 +277,11 @@ util.formatDate = function(dateStr, fmt) {
   // return dateStr
 }
 
+util.formatDate2 = function(dateStr, fmt) {
+  var jun = moment(dateStr);
+  return jun.tz('Asia/Taipei').format(fmt);
+  //
+  // return dateStr
+}
+
 export default util
