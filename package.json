@@ -44,12 +44,14 @@
     "koa-static": "^5.0.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
-    "nuxt": "latest",
+    "nuxt": "^2.4.5",
     "rasterizehtml": "^1.2.4",
+    "resize-detector": "^0.2.0",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",
     "source-map-support": "^0.4.15",
     "tinymce": "^4.7.4",
+    "vue-echarts": "^4.0.1",
     "vuex-persist": "^1.2.2"
   },
   "devDependencies": {

@@ -1,13 +1,28 @@
+<style lang="less">
+.hello{
+    width: 100%;
+    height: 150px;
+}
+</style>
 <template>
-    <div style="width:100%;height:100%;" id="service_request_con"></div>
+  <div><v-chart :options="polar" :auto-resize="true" class="hello"/></div>
 </template>
 
 <script>
 import echarts from 'echarts';
+let data = []
+
+for (let i = 0; i <= 360; i++) {
+    let t = i / 180 * Math.PI
+    let r = Math.sin(2 * t) * Math.cos(2 * t)
+    data.push([r, i])
+}
+
 export default {
     name: 'serviceRequests',
-    mounted () {
-        const option = {
+    data () {
+        return {
+            polar: {
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -89,13 +104,8 @@ export default {
                     data: [820, 645, 546, 745, 872, 624, 258]
                 }
             ]
-        };
-        const serviceRequestCharts = echarts.init(document.getElementById('service_request_con'));
-        serviceRequestCharts.setOption(option);
-
-        window.addEventListener('resize', function () {
-            serviceRequestCharts.resize();
-        });
+        }
+        }
     }
 };
 </script>

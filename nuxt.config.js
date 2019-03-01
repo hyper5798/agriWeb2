@@ -21,7 +21,8 @@ module.exports = {
   plugins: [
     { src: '~plugins/flexible.js', ssr: false },
     { src: '~plugins/iview.js', ssr: true },
-    { src: '~plugins/filters.js', ssr: true }
+    { src: '~plugins/filters.js', ssr: true },
+    { src: '~plugins/echarts.js', ssr: true }
   ],
   loading: './components/loading.vue',
   env: {
@@ -36,6 +37,7 @@ module.exports = {
   },
   build: {
     vendor: ['axios', 'iview', './plugins/iview.js'],
+    transpile: ['vue-echarts', 'resize-detector'],
     extend(config, ctx) {
       if (ctx.isClient) {
         // config.module.rules.push({
