@@ -58,7 +58,7 @@
           <Col span="6">
             選擇類型
             <Select v-model="selectType" style="width:200px">
-                <Option v-for="item in mapList" :value="item.deviceType" :key="item.deviceType">{{ item.typeName }})</Option>
+                <Option v-for="item in mapList" :value="item.deviceType" :key="item.deviceType">{{ item.typeName }}</Option>
             </Select>
           </Col>
           <Col span="6">
@@ -103,13 +103,7 @@
             <Card>
                 <div slot="title" >
                   <Row class="event-item">
-                    <Col span="4">
-                          <p>起始日期:{{start}}</p>
-                    </col>
-                    <Col span="4">
-                          <p>結束日期:{{end}}</p>
-                    </col>
-                    <Col span="8">
+                    <Col span="16">
                       <ButtonGroup>
                         <Button type="primary" ghost>
                           <Icon type="ios-grid-view"></Icon>
@@ -267,17 +261,22 @@ export default {
       console.log('values :', JSON.stringify(values))
       console.log('values :', JSON.stringify(this.columnsList2))
       this.findItem.token = this.$store.state.user.token
-      let range = util.getDefaultRange('YYYY-MM-DD')
-      if(this.start != '') {
+      let range1 = util.getDefaultRange('YYYY-MM-DD')
+      let range2 = util.getDefaultRange('YYYY-MM-DD')
+      if(typeof(this.start)== 'object' || this.start == '') {
+        this.start = range1.start
+        this.findItem.from = range2.start + ' 00:00:00Z+8'
+      } else {
         this.findItem.from = this.start + ' 00:00:00Z+8'
-      } else {
-        this.findItem.from = range.start + ' 00:00:00Z+8'
       }
-      if(this.end != '') {
-        this.findItem.to = this.end + ' 00:00:00Z+8'
+      if(typeof(this.end)== 'object' || this.end == '') {
+        this.end = range1.end
+        this.findItem.to = range2.end + ' 00:00:00Z+8'
       } else {
-        this.findItem.to = range.end + ' 00:00:00Z+8'
+        this.findItem.to = this.end  + ' 00:00:00Z+8'
       }
+      // alert(typeof this.end  )
+      
       this.findItem.macAddr = this.findItem.macAddr.toLowerCase();
       let req = await getEventList(this.findItem)
       if(req.data && req.data.data) {
@@ -297,7 +296,12 @@ export default {
         }
       }
       //取得類型下裝置
-      this.tableData = this.allList[type]
+      if(this.allList[type]) {
+        this.tableData = this.allList[type]
+      } else {
+        this.tableData = []
+      }
+      
       //取得類型下裝置列表第一個裝置mac
       if(this.tableData.length>0 && this.tableData[0]['device_mac']) {
         this.findItem.macAddr = this.tableData[0]['device_mac']
