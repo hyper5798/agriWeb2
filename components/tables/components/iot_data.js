@@ -170,15 +170,12 @@ export const eventColumns = [
     width: 60,
     align: 'center',
     fixed: 'left'
-  },
+  }/*,
   {
     title: '日期',
     align: 'center',
-    key: 'recv',
-    render: function (h) {
-      return h('div',util.formatDate2(this.row.recv, 'YYYY-MM-DD HH:mm:ss'))
-    }
-  }/* ,
+    key: 'recv'
+  },
   {
     title: '參數',
     align: 'center',

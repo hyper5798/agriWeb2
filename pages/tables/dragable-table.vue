@@ -7,29 +7,10 @@
   padding: 0px 10px;
   line-height: 50px;
 }
-.dragging-tip-con {
-  display: block;
-  text-align: center;
-  width: 100%;
-  height: 50px;
-}
-.dragging-tip-con span {
-  font-size: 18px;
-}
-.record-tip-con {
-  display: block;
-  width: 100%;
-  height: 292px;
-  overflow: auto;
-}
-.record-item {
-  box-sizing: content-box;
-  display: block;
-  overflow: hidden;
-  height: 24px;
-  line-height: 24px;
-  padding: 8px 10px;
-  border-bottom: 1px dashed gainsboro;
+
+.title-item {
+  height: 40px;
+  line-height: 40px;
 }
 .record-tip-con span {
   font-size: 14px;
@@ -106,7 +87,7 @@
             <Card>
                 <p slot="title">
                     <Icon type="clipboard"></Icon>
-                     選擇裝置
+                     選擇裝置:{{findItem.macAddr}}
                 </p>
                 <Table
                     height="350"
@@ -121,16 +102,12 @@
             <Col span="19" class="padding-left-10">
             <Card>
                 <div slot="title" >
-                  <Row >
-                    <Col span="6">
-                          <Icon type="clipboard"></Icon>
-                          選擇裝置:{{findItem.macAddr}}
+                  <Row class="event-item">
+                    <Col span="4">
+                          <p>起始日期:{{start}}</p>
                     </col>
                     <Col span="4">
-                          起始日期:{{start}}
-                    </col>
-                    <Col span="4">
-                          結束日期:{{end}}
+                          <p>結束日期:{{end}}</p>
                     </col>
                     <Col span="8">
                       <ButtonGroup>
@@ -142,16 +119,14 @@
                           <Icon type="ios-alarm"></Icon>
                           折線圖
                         </Button>
-                      
-                        <Button type="primary">
-                          <Icon type="ios-refresh-empty"></Icon>
-                          更新
-                        </Button>
-                        <Button type="primary" @click="toFind">
+                        <Button type="primary" :loading="loading1" @click="toFind">
                           <Icon type="ios-search" ></Icon>
                           查詢
                         </Button>
                       </ButtonGroup>
+                    </col>
+                    <Col span="8">
+                          <p>{{findResult}}</p>
                     </col>
                   </Row>
                 </div>
@@ -197,10 +172,12 @@ export default {
         newIndex: 0,
         chooseRecord: []
       },
+      loading1: false,
       selectType: '',
       selectedMap: {},
       mapList: [],
-      start: '2018-10-01',
+      findResult: '未設定日期時預設查詢一週紀錄',
+      start: '',
       end: '',
       findItem: {
         macAddr: '',
@@ -216,7 +193,6 @@ export default {
       this.selectType = this.$store.state.device.map[0]['deviceType'] 
       this.mapList = this.$store.state.device.map
       this.columnsList = iotData.deviceColumns2
-      
       let list = this.$store.state.device.list
       let arr = []
       for(let i=0; i < list.length; ++i) {
@@ -227,7 +203,7 @@ export default {
         }
         (this.allList[type]).push(obj)
       }
-      console.log(JSON.stringify(this.allList))
+      let range = util.getDefaultRange('YYYY-MM-DD')
     },
     selectDevice (selection, row) {
       this.findItem.macAddr = selection.device_mac
@@ -239,10 +215,25 @@ export default {
         this.end = date;
     },
     async toFind () {
+      if(this.loading1) return
+      this.loading1 = true
+      //Reset to default
+      this.tableData2 = []
+      this.findResult = ''
       // 取得table header -- start
       let keys = Object.keys(this.selectedMap.fieldName)
       let values = Object.values(this.selectedMap.fieldName)
       this.columnsList2 = JSON.parse(JSON.stringify(iotData.eventColumns))
+      this.columnsList2.push({
+        title: '日期',
+        width: 180,
+        align: 'center',
+        fixed: true,
+        key: 'recv',
+        render: function (h) {
+          return h('div',util.formatDate2(this.row.recv, 'YYYY-MM-DD HH:mm:ss'))
+        }
+      })
       for(let i = 0; i < values.length; ++i) {
         let obj = {
           title: values[i],
@@ -254,18 +245,47 @@ export default {
         }
         this.columnsList2.push(obj)
       } 
+      this.columnsList2.push({
+          title: 'frameCnt',
+          align: 'center',
+          key: 'extra',
+          render: function (h) {
+            return h('div', this.row.extra.frameCnt);
+          }
+        })
+      this.columnsList2.push({
+          title: 'gwid',
+          align: 'center',
+          key: 'extra',
+          width: 180,
+          fixed: true,
+          render: function (h) {
+            return h('div', this.row.extra.gwid);
+          }
+        })
       console.log('keys :', JSON.stringify(keys))
       console.log('values :', JSON.stringify(values))
       console.log('values :', JSON.stringify(this.columnsList2))
       this.findItem.token = this.$store.state.user.token
-      this.findItem.from = this.start + ' 00:00:00Z+8'
-      this.findItem.to = this.end + ' 00:00:00Z+8'
-      
+      let range = util.getDefaultRange('YYYY-MM-DD')
+      if(this.start != '') {
+        this.findItem.from = this.start + ' 00:00:00Z+8'
+      } else {
+        this.findItem.from = range.start + ' 00:00:00Z+8'
+      }
+      if(this.end != '') {
+        this.findItem.to = this.end + ' 00:00:00Z+8'
+      } else {
+        this.findItem.to = range.end + ' 00:00:00Z+8'
+      }
       this.findItem.macAddr = this.findItem.macAddr.toLowerCase();
       let req = await getEventList(this.findItem)
       if(req.data && req.data.data) {
         this.tableData2 = req.data.data
+        let msg = '查詢到 '+  req.data.data.length + '筆紀錄'
+        this.findResult = msg
       }
+      this.loading1 = false
     },
     getMapAndDevice (type) {
       // type選中的類型代號

@@ -1,5 +1,6 @@
 import moment from 'moment-timezone';
 let util = {}
+let interval = 7 //For date range 
 
 util.inOf = function(arr, targetArr) {
   let res = true
@@ -282,6 +283,12 @@ util.formatDate2 = function(dateStr, fmt) {
   return jun.tz('Asia/Taipei').format(fmt);
   //
   // return dateStr
+}
+
+util.getDefaultRange = function(fmt) {
+  let start = moment().subtract(interval, 'days')
+  let end = moment().add(1, 'days')
+  return {start: start.format(fmt), end:end.format(fmt) }
 }
 
 export default util
