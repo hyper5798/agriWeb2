@@ -44,14 +44,8 @@ axios.interceptors.response.use(
     return res
   },
   err => {
-    console.log('axios2 err: ')
-    console.log(err)
-    if (err.response.status !== 200) {
-      if (process.client) {
-        Message.error(err.response.data.msg || '')
-      }
-    }
-    return Promise.resolve(err.response)
+    Message.error('網路通訊異常')
+    return Promise.resolve(err)
   }
 )
 export default axios

@@ -105,11 +105,11 @@
                   <Row class="event-item">
                     <Col span="16">
                       <ButtonGroup>
-                        <Button type="primary" ghost>
+                        <Button type="primary" @click="toTable">
                           <Icon type="ios-grid-view"></Icon>
                           資料表
                         </Button>
-                        <Button type="primary">
+                        <Button type="primary" @click="toChart">
                           <Icon type="ios-alarm"></Icon>
                           折線圖
                         </Button>
@@ -125,13 +125,18 @@
                   </Row>
                 </div>
                 <div>
-                  <Table
-                      height="350"
-                      highlight-row
+                  <event-chart v-show="!isTable"></event-chart>
+                  <div v-show="isTable">
+                    <Table
+                      height="520"
+                      disabled-hover
                       :columns="columnsList2"
                       :data="tableData2"
                       border>
-                  </Table>
+                    </Table>
+                    <Page :total="dataCount" :page-size="pageSize" :current="pageCurrent" show-total  @on-change="changepage"></Page>
+                  </div>
+                  
                 </div>
             </Card>
             </Col>
@@ -143,6 +148,7 @@
 import DragableTable from '~/components/tables/components/dragableTable.vue'
 import canEditTable from '~/components/tables/components/canEditTable.vue'
 import iotData from '~/components/tables/components/iot_data.js'
+import eventChart from '~/components/find/eventChart.vue'
 import { getEventList } from '~/libs/api'
 import util from '~/libs/util.js'
 
@@ -150,7 +156,8 @@ export default {
   name: 'dragable-table',
   components: {
     DragableTable,
-    canEditTable
+    canEditTable,
+    eventChart
   },
   data() {
     return {
@@ -167,6 +174,7 @@ export default {
         chooseRecord: []
       },
       loading1: false,
+      isTable: false,
       selectType: '',
       selectedMap: {},
       mapList: [],
@@ -179,10 +187,29 @@ export default {
         to: '',
         paginate: false, 
         limit: 5000
-      }
+      },
+      dataCount: 0,
+      pageSize: 10,
+      pageCurrent: 1,
+      ajaxHistoryData: [],
+      Modellist: []
     }
   },
   methods: {
+    pageShow(){
+      // 保存取到的所有数据
+      this.ajaxHistoryData= this.Modellist
+      this.dataCount = this.Modellist.length
+      var _start = ( this.pageCurrent - 1 ) * this.pageSize
+      var _end = this.pageCurrent * this.pageSize
+      this.tableData2 = this.ajaxHistoryData.slice(_start,_end)
+    },
+    changepage(index){
+      var _start = ( index - 1 ) * this.pageSize
+      var _end = index * this.pageSize
+      this.tableData2 = this.ajaxHistoryData.slice(_start,_end)
+      this.pageCurrent=index
+    },
     getData() {
       this.selectType = this.$store.state.device.map[0]['deviceType'] 
       this.mapList = this.$store.state.device.map
@@ -210,8 +237,10 @@ export default {
     },
     async toFind () {
       if(this.loading1) return
+      
       this.loading1 = true
       //Reset to default
+      this.isTable = true
       this.tableData2 = []
       this.findResult = ''
       // 取得table header -- start
@@ -280,11 +309,12 @@ export default {
       this.findItem.macAddr = this.findItem.macAddr.toLowerCase();
       let req = await getEventList(this.findItem)
       if(req.data && req.data.data) {
-        this.tableData2 = req.data.data
+        this.Modellist = req.data.data
         let msg = '查詢到 '+  req.data.data.length + '筆紀錄'
         this.findResult = msg
       }
       this.loading1 = false
+      this.pageShow()
     },
     getMapAndDevice (type) {
       // type選中的類型代號
@@ -308,11 +338,21 @@ export default {
       } else {
         this.findItem.macAddr = ''
       }
+    },
+    toTable () {
+      this.isTable = true
+    },
+    toChart () {
+      this.isTable = false
     }
   },
   created() {
     // 可在此从服务端获取表格数据
     this.getData()
+  },
+  mounted() {
+    // 可在此从服务端获取表格数据
+    this.isTable = true
   },
   watch: {
       selectType (data) {
