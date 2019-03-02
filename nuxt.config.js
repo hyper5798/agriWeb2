@@ -36,7 +36,7 @@ module.exports = {
     middleware: 'route' // 在每页渲染前运行 middleware/route.js 中间件的逻辑
   },
   build: {
-    vendor: ['axios', 'iview', './plugins/iview.js'],
+    vendor: ['axios', 'iview', './plugins/iview.js','~plugins/echarts.js','echarts'],
     transpile: ['vue-echarts', 'resize-detector'],
     extend(config, ctx) {
       if (ctx.isClient) {

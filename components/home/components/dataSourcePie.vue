@@ -1,21 +1,23 @@
+<style lang="less">
+.pie-chart{
+    width: 100%;
+    height: 200px;
+}
+</style>
 <template>
-    <div style="width:100%;height:100%;" id="data_source_con"></div>
+    <div>
+      <v-chart :options="option" :auto-resize="true" class="pie-chart"/>
+    </div>
+    
 </template>
 
 <script>
-import echarts from 'echarts';
 
 export default {
     name: 'dataSourcePie',
     data () {
         return {
-            //
-        };
-    },
-    mounted () {
-        this.$nextTick(() => {
-            var dataSourcePie = echarts.init(document.getElementById('data_source_con'));
-            const option = {
+            option:{
                 tooltip: {
                     trigger: 'item',
                     formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -47,12 +49,8 @@ export default {
                         }
                     }
                 ]
-            };
-            dataSourcePie.setOption(option);
-            window.addEventListener('resize', function () {
-                dataSourcePie.resize();
-            });
-        });
+            }
+        };
     }
 };
 </script>

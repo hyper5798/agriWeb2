@@ -43,7 +43,7 @@
     height: 200px;
 }
 .line-chart-con{
-    height: 150px;
+    height: 350px;
 }
 
 @import '../assets/css/common.less';
@@ -174,7 +174,7 @@
             <Card>
                 <p slot="title" class="card-title">
                     <Icon type="android-wifi"></Icon>
-                    各类用户服务调用变化统计
+                    溫濕度顯示
                 </p>
                 <div class="data-source-row">
                     <user-flow></user-flow>
@@ -186,7 +186,7 @@
             <Card>
                 <p slot="title" class="card-title">
                     <Icon type="ios-shuffle-strong"></Icon>
-                    上周每日服务调用量(万)
+                    未來一週天氣變化
                 </p>
                 <div class="line-chart-con">
                     <service-requests></service-requests>

@@ -1,9 +1,16 @@
+<style lang="less">
+.guage-chart{
+    width: 100%;
+    height: 200px;
+}
+</style>
 <template>
-    <div style="width:100%;height:100%;" id="user_flow"></div>
+    <div>
+      <v-chart :options="option" :auto-resize="true" class="guage-chart"/>
+    </div>
 </template>
 
 <script>
-import echarts from 'echarts';
 
 const option = {
     tooltip: {
@@ -11,16 +18,16 @@ const option = {
     },
     series: [
         {
-            name: '入流量',
+            name: '濕度',
             type: 'gauge',
             min: 0,
-            max: 1000,
+            max: 100,
             detail: {
-                formatter: '{value}Mb+',
+                formatter: '{value}％',
                 fontSize: 18,
                 offsetCenter: [0, '50px']
             },
-            data: [{value: 50, name: '当前入流量'}],
+            data: [{value: 50, name: '目前濕度'}],
             center: ['25%', '50%'],
             radius: '80%',
             title: {
@@ -37,16 +44,16 @@ const option = {
             }
         },
         {
-            name: '出流量',
+            name: '溫度',
             type: 'gauge',
-            min: 0,
-            max: 1000,
+            min: -50,
+            max: 50,
             detail: {
-                formatter: '{value}Mb+',
+                formatter: '{value}度',
                 fontSize: 18,
                 offsetCenter: [0, '50px']
             },
-            data: [{value: 50, name: '当前出流量'}],
+            data: [{value: 50, name: '目前溫度'}],
             center: ['75%', '50%'],
             radius: '80%',
             title: {
@@ -67,15 +74,14 @@ const option = {
 
 export default {
     name: 'userFlow',
+    data () {
+        return {
+            option:option
+        }
+    },
     mounted () {
-        let userFlow = echarts.init(document.getElementById('user_flow'));
-        option.series[0].data[0].value = (Math.random() * 1000).toFixed(2) - 0;
-        option.series[1].data[0].value = (Math.random() * 1000).toFixed(2) - 0;
-        userFlow.setOption(option);
-
-        window.addEventListener('resize', function () {
-            userFlow.resize();
-        });
+        this.option.series[0].data[0].value = 60
+        this.option.series[1].data[0].value = 30
     }
 };
 </script>

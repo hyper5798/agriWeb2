@@ -1,7 +1,7 @@
 <style lang="less">
 .hello{
     width: 100%;
-    height: 150px;
+    height: 350px;
 }
 </style>
 <template>
@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import echarts from 'echarts';
 let data = []
 
 for (let i = 0; i <= 360; i++) {
@@ -23,88 +22,89 @@ export default {
     data () {
         return {
             polar: {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985'
+                title: {
+                    show: false,
+                    text: '天氣變化',
+                    subtext: '資料來自YAHOO'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['最高氣溫','最低氣溫']
+                },
+                toolbox: {
+                    show: false,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: {readOnly: false},
+                        magicType: {type: ['line', 'bar']},
+                        restore: {},
+                        saveAsImage: {}
                     }
-                }
-            },
-            grid: {
-                top: '3%',
-                left: '1.2%',
-                right: '1%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [
-                {
+                },
+                xAxis:  {
                     type: 'category',
                     boundaryGap: false,
-                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: '运营商/网络服务',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {
-                        color: '#2d8cf0'
-                    }},
-                    data: [120, 132, 101, 134, 90, 230, 210]
+                    data: ['周一','周二','周三','周四','周五','周六','周日']
                 },
-                {
-                    name: '银行/证券',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {
-                        color: '#10A6FF'
-                    }},
-                    data: [257, 358, 278, 234, 290, 330, 310]
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        formatter: '{value} °C'
+                    }
                 },
-                {
-                    name: '游戏/视频',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {
-                        color: '#0C17A6'
-                    }},
-                    data: [379, 268, 354, 269, 310, 478, 358]
-                },
-                {
-                    name: '餐饮/外卖',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {
-                        color: '#4608A6'
-                    }},
-                    data: [320, 332, 301, 334, 390, 330, 320]
-                },
-                {
-                    name: '快递/电商',
-                    type: 'line',
-                    stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top'
+                series: [
+                    {
+                        name:'最高氣溫',
+                        type:'line',
+                        data:[29, 27, 22, 23, 25, 23, 26],
+                        markPoint: {
+                            data: [
+                                {type: 'max', name: '最大值'},
+                                {type: 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '平均值'}
+                            ]
                         }
                     },
-                    areaStyle: {normal: {
-                        color: '#398DBF'
-                    }},
-                    data: [820, 645, 546, 745, 872, 624, 258]
-                }
-            ]
-        }
+                    {
+                        name:'最低氣溫',
+                        type:'line',
+                        data:[18, 21, 20, 19, 20, 21, 20],
+                        markPoint: {
+                            data: [
+                                {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '平均值'},
+                                [{
+                                    symbol: 'none',
+                                    x: '90%',
+                                    yAxis: 'max'
+                                }, {
+                                    symbol: 'circle',
+                                    label: {
+                                        normal: {
+                                            position: 'start',
+                                            formatter: '最大值'
+                                        }
+                                    },
+                                    type: 'max',
+                                    name: '最高點'
+                                }]
+                            ]
+                        }
+                    }
+                ]
+            }
         }
     }
 };
