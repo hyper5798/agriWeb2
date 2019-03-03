@@ -170,12 +170,12 @@ export const eventColumns = [
     width: 60,
     align: 'center',
     fixed: 'left'
-  },
+  }/* ,
   {
     title: '日期',
     align: 'center',
     key: 'recv'
-  }/* ,
+  },
   {
     title: '參數',
     align: 'center',
