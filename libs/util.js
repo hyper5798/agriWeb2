@@ -286,7 +286,7 @@ util.formatDate2 = function(dateStr, fmt) {
 }
 
 util.getDefaultRange = function(fmt) {
-  let start = moment().subtract(interval, 'days')
+  let start = moment().subtract(7, 'days')
   let end = moment().add(1, 'days')
   return {start: start.format(fmt), end:end.format(fmt) }
 }

@@ -40,10 +40,13 @@
 .show-image {
   padding: 20px 0px;
 }
-.show-image img {
-  display: block;
+.table-chart {
   width: 100%;
-  height: auto;
+  height: 700;
+}
+.event-item {
+  width: 100%;
+  height: 900;
 }
 .searchable-table {
   &-con1 {
@@ -124,8 +127,11 @@
                     </col>
                   </Row>
                 </div>
-                <div>
-                  <event-chart v-show="!isTable"></event-chart>
+                <div class="table-chart">
+                  <event-chart v-show="!isTable"
+                               :map="selectedMap"
+                               :eventData="eventlist">
+                  </event-chart>
                   <div v-show="isTable">
                     <Table
                       height="520"
@@ -192,14 +198,14 @@ export default {
       pageSize: 10,
       pageCurrent: 1,
       ajaxHistoryData: [],
-      Modellist: []
+      eventlist: []
     }
   },
   methods: {
     pageShow(){
       // 保存取到的所有数据
-      this.ajaxHistoryData= this.Modellist
-      this.dataCount = this.Modellist.length
+      this.ajaxHistoryData= this.eventlist
+      this.dataCount = this.eventlist.length
       var _start = ( this.pageCurrent - 1 ) * this.pageSize
       var _end = this.pageCurrent * this.pageSize
       this.tableData2 = this.ajaxHistoryData.slice(_start,_end)
@@ -239,8 +245,8 @@ export default {
       if(this.loading1) return
       
       this.loading1 = true
-      //Reset to default
-      this.isTable = true
+      // Reset to default
+      // this.isTable = true
       this.tableData2 = []
       this.findResult = ''
       // 取得table header -- start
@@ -309,7 +315,7 @@ export default {
       this.findItem.macAddr = this.findItem.macAddr.toLowerCase();
       let req = await getEventList(this.findItem)
       if(req.data && req.data.data) {
-        this.Modellist = req.data.data
+        this.eventlist = req.data.data
         let msg = '查詢到 '+  req.data.data.length + '筆紀錄'
         this.findResult = msg
       }
@@ -322,7 +328,9 @@ export default {
       for(let i = 0; i < this.mapList.length; i++) {
         let map = this.mapList[i]
         if(map.deviceType == type) {
-          this.selectedMap = map
+          this.$nextTick(() => {
+            this.selectedMap = map
+          })
         }
       }
       //取得類型下裝置
@@ -347,11 +355,9 @@ export default {
     }
   },
   created() {
-    // 可在此从服务端获取表格数据
     this.getData()
   },
   mounted() {
-    // 可在此从服务端获取表格数据
     this.isTable = true
   },
   watch: {
