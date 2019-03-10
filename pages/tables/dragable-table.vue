@@ -116,6 +116,10 @@
                           <Icon type="ios-alarm"></Icon>
                           折線圖
                         </Button>
+                        <Button type="primary" @click="exportData">
+                          <Icon type="ios-download-outline" ></Icon>
+                          匯出CSV
+                        </Button>
                         <Button type="primary" :loading="loading1" @click="toFind">
                           <Icon type="ios-search" ></Icon>
                           查詢
@@ -134,10 +138,12 @@
                   </event-chart>
                   <div v-show="isTable">
                     <Table
-                      height="520"
+                      :loading="loading1"
+                      height="fixedHeader ? 520 : ''"
                       disabled-hover
                       :columns="columnsList2"
                       :data="tableData2"
+                      ref="table"
                       border>
                     </Table>
                     <Page :total="dataCount" :page-size="pageSize" :current="pageCurrent" show-total  @on-change="changepage"></Page>
@@ -198,7 +204,14 @@ export default {
       pageSize: 10,
       pageCurrent: 1,
       ajaxHistoryData: [],
-      eventlist: []
+      eventlist: [],
+      showBorder: false,
+      showStripe: false,
+      showHeader: true,
+      showIndex: true,
+      showCheckbox: false,
+      fixedHeader: false,
+      tableSize: 'default'
     }
   },
   methods: {
@@ -371,6 +384,11 @@ export default {
     },
     toChart () {
       this.isTable = false
+    },
+    exportData () {
+      this.$refs.table.exportCsv({
+          filename: 'The original data'
+      });
     }
   },
   created() {

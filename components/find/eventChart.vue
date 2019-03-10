@@ -131,7 +131,9 @@ export default {
                         type: 'line',
                         data: []
                     }
-                    serials.push(serial)
+                    if(name != '電壓') {
+                        serials.push(serial)
+                    }
                 });
                 this.$nextTick(() => {
                     this.option.legend.data = this.legend
