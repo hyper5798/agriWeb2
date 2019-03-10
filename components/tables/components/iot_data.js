@@ -116,7 +116,7 @@ export const deviceColumns = [
     title: '名稱',
     align: 'center',
     key: 'device_name',
-    width: 180,
+    width: 200,
     editable: true,
     flexd: 'left'
   },
@@ -124,7 +124,7 @@ export const deviceColumns = [
     title: '識別碼',
     align: 'center',
     key: 'device_mac',
-    width: 180
+    width: 200
   },
   {
     title: '裝置狀態',
@@ -145,7 +145,7 @@ export const deviceColumns = [
   {
     title: '操作',
     align: 'center',
-    width: 180,
+    width: 200,
     key: 'handle',
     handle: ['edit', 'delete'],
     flexd: 'right'

@@ -9,14 +9,16 @@ import { Message } from 'iview'
 const env = process.env.NODE_ENV || 'development'
 
 let baseUrl = {
-  development: 'http://161.202.32.59:8000',
+  // development: 'http://161.202.32.59:8000', //花蓮poc
+  development: 'http://119.81.189.47:8000', //永齡poc
+  // development: 'http://localhost:8000',
   test: 'https://crmfront.tiaoweilian.com',
   production: 'https://crm.youjiangliao.com'
 }
 
 let options = {
   baseURL: baseUrl[env],
-  timeout: 5000,
+  timeout: 10000,
   responseType: 'json',
   headers: {
     post: {

@@ -80,18 +80,25 @@ export default {
     },
     watch: {
         eventData (data) {
+            console.log('$$$$ eventData :' + JSON.stringify(data))
             if(data && data.length > 0) {
                 let mData = {time:[]}
+                console.log('$$$$ this.arrs :' + this.arrs.length)
                 this.arrs.forEach(function(key) {
                     mData[key] = []
                 });
+                console.log('$$$$ mData :' + JSON.stringify(mData))
+                let arr = this.arrs
                 
                 data.forEach(function(item) {
                     mData.time.push(util.formatDate2(item.recv, 'MM/DD HH:mm'))
-                    let arr = Object.keys(item.information)
-                    let values = Object.values(item.information)
+                    
                     for(let i=0; i < arr.length; ++i) {
-                        mData[arr[i]].push(values[i])
+                        let key = arr[i]
+                        if(mData[key] == undefined) {
+                            mData[key] = []
+                        }
+                        mData[key].push(item[key])
                     }
                 });
                 this.option.xAxis.data = mData.time

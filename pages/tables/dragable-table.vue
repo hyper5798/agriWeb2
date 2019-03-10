@@ -245,61 +245,19 @@ export default {
       if(this.loading1) return
       
       this.loading1 = true
-      // Reset to default
+      // Reset to default ----- start
       // this.isTable = true
+      this.eventlist = [] //用來存放修改過的資料內容
       this.tableData2 = []
       this.findResult = ''
-      // 取得table header -- start
-      let keys = Object.keys(this.selectedMap.fieldName)
-      let values = Object.values(this.selectedMap.fieldName)
-      this.columnsList2 = JSON.parse(JSON.stringify(iotData.eventColumns))
-      this.columnsList2.push({
-        title: '日期',
-        width: 180,
-        align: 'center',
-        fixed: true,
-        key: 'recv',
-        render: function (h) {
-          return h('div',util.formatDate2(this.row.recv, 'YYYY-MM-DD HH:mm:ss'))
-        }
-      })
-      for(let i = 0; i < values.length; ++i) {
-        let obj = {
-          title: values[i],
-          align: 'center',
-          key: 'information',
-          render: function (h) {
-            return h('div', this.row.information[keys[i]]);
-          }
-        }
-        this.columnsList2.push(obj)
-      } 
-      this.columnsList2.push({
-          title: 'frameCnt',
-          align: 'center',
-          key: 'extra',
-          render: function (h) {
-            return h('div', this.row.extra.frameCnt);
-          }
-        })
-      this.columnsList2.push({
-          title: 'gwid',
-          align: 'center',
-          key: 'extra',
-          width: 180,
-          fixed: true,
-          render: function (h) {
-            return h('div', this.row.extra.gwid);
-          }
-        })
-      console.log('keys :', JSON.stringify(keys))
-      console.log('values :', JSON.stringify(values))
-      console.log('values :', JSON.stringify(this.columnsList2))
+      // Reset to default ----- end
+      // this.updateTableHeader();
       this.findItem.token = this.$store.state.user.token
+      //因datapicker輸入欄跟顯示不同所以需兩組資料
       let range1 = util.getDefaultRange('YYYY-MM-DD')
       let range2 = util.getDefaultRange('YYYY-MM-DD')
       if(typeof(this.start)== 'object' || this.start == '') {
-        this.start = range1.start
+        this.start = range1.start 
         this.findItem.from = range2.start + ' 00:00:00Z+8'
       } else {
         this.findItem.from = this.start + ' 00:00:00Z+8'
@@ -315,12 +273,72 @@ export default {
       this.findItem.macAddr = this.findItem.macAddr.toLowerCase();
       let req = await getEventList(this.findItem)
       if(req.data && req.data.data) {
-        this.eventlist = req.data.data
-        let msg = '查詢到 '+  req.data.data.length + '筆紀錄'
+        //修改取得資料內容
+        let list= JSON.parse(JSON.stringify(req.data.data))
+        let msg = '尋找到 ' + list.length + ' 筆紀錄'
+        for(let i=0; i < list.length; i++) {
+          let item = list[i]
+          item = Object.assign(item, item.information)
+          delete item.information
+          item = Object.assign(item, item.extra)
+          delete item.extra
+        }
+        this.eventlist = list
         this.findResult = msg
       }
       this.loading1 = false
       this.pageShow()
+    },
+    updateTableHeader () {
+      // 取得table header -- start
+      let mKeys = Object.keys(this.selectedMap.fieldName)
+      let values = Object.values(this.selectedMap.fieldName)
+      this.columnsList2 = JSON.parse(JSON.stringify(iotData.eventColumns))
+      this.columnsList2.push({
+        title: '日期',
+        width: 200,
+        align: 'center',
+        fixed: true,
+        key: 'recv',
+        render: function (h) {
+          return h('div',util.formatDate2(this.row.recv, 'YYYY-MM-DD HH:mm:ss'))
+        }
+      })
+      for(let i = 0; i < values.length; ++i) {
+        let obj = {
+          title: values[i],
+          align: 'center',
+          key: mKeys[i]
+          /* key: 'information',
+          render: function (h) {
+            return h('div', this.row.information[keys[i]]);
+          } */
+        }
+        this.columnsList2.push(obj)
+      } 
+      this.columnsList2.push({
+          title: 'frameCnt',
+          align: 'center',
+          key: 'frameCnt'
+          /* key: 'extra',
+          render: function (h) {
+            return h('div', this.row.extra.frameCnt);
+          } */
+        })
+      this.columnsList2.push({
+          title: 'gwid',
+          align: 'center',
+          width: 180,
+          fixed: true,
+          key: 'gwid'
+          /* key: 'extra',
+          render: function (h) {
+            return h('div', this.row.extra.gwid);
+          } */
+        })
+      console.log('keys :', JSON.stringify(mKeys))
+      console.log('values :', JSON.stringify(values))
+      console.log('values :', JSON.stringify(this.columnsList2))
     },
     getMapAndDevice (type) {
       // type選中的類型代號
@@ -330,6 +348,7 @@ export default {
         if(map.deviceType == type) {
           this.$nextTick(() => {
             this.selectedMap = map
+            this.updateTableHeader();
           })
         }
       }

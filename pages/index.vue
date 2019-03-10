@@ -258,19 +258,21 @@ export default {
     let params = {token: store.state.user.token}
     if(store.state.user.users.length == 0) {
       req = await getUserList(params)
-      if(req.data.users) {
+      if(req.data && req.data.users) {
           store.commit('user/SET_USERS', req.data.users)
       }
     }
     if(store.state.device.map.length == 0) {
       req1 = await getMapList(params)
-      if(req1.data.data) {
+      console.log('???? index map :')
+      console.log(req1)
+      if(req1.data && req1.data.data) {
           store.commit('device/SET_MAP', req1.data.data)
       }
     }
     if(store.state.device.list.length == 0) {
       req2 = await getSensorList(params)
-      if(req2.data.mList) {
+      if(req2.data && req2.data.mList) {
         store.commit('device/SET_LIST', req2.data.mList)
       }
     }
