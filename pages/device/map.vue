@@ -114,7 +114,7 @@
                             refs="table1" 
                             v-model="tableData2" 
                             :columns-list="columnsList2" 
-                            @on-test="handleTest">
+                            @on-del-item="handleTest">
                     </can-edit-table>
                   </Col>
               </Row>
