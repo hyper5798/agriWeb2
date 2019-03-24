@@ -96,6 +96,10 @@ export const getSensorList = (params) => {
   export const activeDevice = (params) => {
     return toPost(active_device_url, params)
   }
+
+  export const addDevice = (params) => {
+    return toPost(device_url, params)
+  }
   
   export const updateDevice = (params) => {
     return toUpdate(device_url, params)
