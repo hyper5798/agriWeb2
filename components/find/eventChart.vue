@@ -80,7 +80,8 @@ export default {
     },
     watch: {
         eventData (data) {
-            console.log('$$$$ eventData :' + JSON.stringify(data))
+            //console.log('$$$$ eventData :' + JSON.stringify(data))
+            console.log('$$$$ eventData :' + data.length)
             if(data && data.length > 0) {
                 let mData = {time:[]}
                 console.log('$$$$ this.arrs :' + this.arrs.length)
@@ -113,7 +114,12 @@ export default {
                     })
                 }
                 console.log('$$$$ this.option :' + JSON.stringify(this.option))
-                
+            } else {
+                for(let j=0; j < this.arrs.length; ++j) {
+                    this.option.series.forEach(function(serial) {
+                        serial.data = []
+                    })
+                }        
             }
         },
         map (data) {
