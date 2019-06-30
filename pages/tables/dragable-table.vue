@@ -387,7 +387,9 @@ export default {
     },
     exportData () {
       this.$refs.table.exportCsv({
-          filename: 'The original data'
+          filename: 'The original data',
+          columns: this.columnsList2,
+          data: this.eventlist
       });
     }
   },
