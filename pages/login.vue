@@ -12,6 +12,11 @@
           <FormItem prop="password" class="form-item">
             <Input type="password" icon="ios-locked" v-model="formData.password" @on-enter="loginSubmit" placeholder="賬戶密碼"></Input>
           </FormItem>
+          <FormItem prop="cp" class="form-item">
+            <Select v-model="formData.cp" style="width:200px">
+                <Option v-for="item in cpList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
           <FormItem class="form-item" style="margin-bottom:5px;">
             <!-- <Checkbox v-model="record">记住登录</Checkbox> -->
             <!-- <a style="float:right;">忘记密码</a> -->
@@ -40,9 +45,24 @@ export default {
       jump: jump,
       record: false,
       loading: false,
+      cpList: [
+                    {
+                        value: 'gemtek',
+                        label: 'gemtek'
+                    },
+                    {
+                        value: 'niu',
+                        label: 'niu'
+                    },
+                    {
+                        value: 'test',
+                        label: 'test'
+                    }
+       ],
       formData: {
         user: 'sysAdmin',
-        password: 'gemtek123'
+        password: 'gemtek123',
+        cp: 'gemtek'
       },
       rule: {
         user: [
@@ -89,7 +109,7 @@ export default {
           let req = await toLogin({
             acc: this.formData.user,
             pwd: this.formData.password,
-            cp: 'gemtek',
+            cp: this.formData.cp,
             type: 0
           })
 
