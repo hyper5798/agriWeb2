@@ -51,12 +51,12 @@ export default {
                         label: 'gemtek'
                     },
                     {
-                        value: 'niu',
-                        label: 'niu'
+                        value: 'NIU',
+                        label: 'NIU'
                     },
                     {
-                        value: 'test',
-                        label: 'test'
+                        value: 'NDHU',
+                        label: 'NDHU'
                     }
        ],
       formData: {
