@@ -312,10 +312,11 @@ export default {
         width: 200,
         align: 'center',
         fixed: true,
-        key: 'recv',
+        key: 'date'
+        /*key: 'recv',
         render: function (h) {
           return h('div',util.formatDate2(this.row.recv, 'YYYY-MM-DD HH:mm:ss'))
-        }
+        }*/
       })
       for(let i = 0; i < values.length; ++i) {
         let obj = {
